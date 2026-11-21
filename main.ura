@@ -17,10 +17,12 @@ fn calc(text String):
     io::out($"result: {p.eval(root)}\n")
 
 fn main() i32:
-    try:
-        calc("2 * (3 + 4) - 10 / 5")
-        calc("8 / (3 - 3)")
-    catch e Error:
-        io::out($"error: {e.message}\n")
+    line String = io::input()
+    while not line.is_empty():
+        try:
+            calc(line)
+        catch e Error:
+            io::out($"error: {e.message}\n")
+        line = io::input()
     io::out("========================================\n")
     return 0

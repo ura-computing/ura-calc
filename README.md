@@ -1,6 +1,6 @@
 # ura-calc
 
-A small calculator written in [ura](https://github.com/ura-computing/ura-lang): it reads an expression, prints its syntax tree and evaluates it.
+A small calculator written in [ura](https://github.com/ura-computing/ura-lang): it reads one expression per line, prints its syntax tree and evaluates it. An empty line ends it.
 
 ```
 calculate expr:  2 * (3 + 4) - 10 / 5
@@ -23,7 +23,8 @@ result: 12
 git clone https://github.com/ura-computing/ura-calc
 cd ura-calc
 ura install
-ura run
+ura run                                    # then type an expression
+echo "2 * (3 + 4) - 10 / 5" | ura run      # or pipe it in
 ```
 
 ## Files
@@ -32,4 +33,4 @@ ura run
 |---|---|
 | `src/lexer.ura` | turns the text into tokens: numbers, `+ - * /` and parentheses |
 | `src/parser.ura` | builds the tree with `*` and `/` before `+` and `-`, prints it and evaluates it |
-| `main.ura` | runs two expressions; a division by zero is thrown and caught in `main` |
+| `main.ura` | reads the lines with `io::input()`; a division by zero is thrown and caught in `main` |
