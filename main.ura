@@ -3,7 +3,6 @@ use "./src/lexer"
 use "./src/parser"
 
 fn calc(text String):
-    io::out("========================================\n")
     io::out($"calculate expr:  {text}\nast:\n")
     p Parser
     p.toks = lex(text)
@@ -17,12 +16,15 @@ fn calc(text String):
     io::out($"result: {p.eval(root)}\n")
 
 fn main() i32:
+    io::out("ura-calc: type an expression, an empty line quits\n")
+    io::out("> ")
     line String = io::input()
     while not line.is_empty():
         try:
             calc(line)
         catch e Error:
             io::out($"error: {e.message}\n")
+        io::out("========================================\n")
+        io::out("> ")
         line = io::input()
-    io::out("========================================\n")
     return 0

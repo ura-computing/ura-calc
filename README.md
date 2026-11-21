@@ -3,6 +3,8 @@
 A small calculator written in [ura](https://github.com/ura-computing/ura-lang): it reads one expression per line, prints its syntax tree and evaluates it. An empty line ends it.
 
 ```
+ura-calc: type an expression, an empty line quits
+> 2 * (3 + 4) - 10 / 5
 calculate expr:  2 * (3 + 4) - 10 / 5
 ast:
 op: -
@@ -15,6 +17,8 @@ op: -
    ├─ 10
    └─ 5
 result: 12
+========================================
+>
 ```
 
 ## Run it
