@@ -1,0 +1,26 @@
+use "@/core"
+use "./src/lexer"
+use "./src/parser"
+
+fn calc(text String):
+    io::out("========================================\n")
+    io::out($"calculate expr:  {text}\nast:\n")
+    p Parser
+    p.toks = lex(text)
+    root i32 = p.expr()
+    io::out($"{p.label(root)}\n")
+    n Node = p.nodes[root]
+    if n.left >= 0:
+        p.show(n.left, "", n.right < 0)
+    if n.right >= 0:
+        p.show(n.right, "", True)
+    io::out($"result: {p.eval(root)}\n")
+
+fn main() i32:
+    try:
+        calc("2 * (3 + 4) - 10 / 5")
+        calc("8 / (3 - 3)")
+    catch e Error:
+        io::out($"error: {e.message}\n")
+    io::out("========================================\n")
+    return 0

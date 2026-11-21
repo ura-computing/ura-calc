@@ -1,0 +1,49 @@
+enum Kind: END, NUMBER, ADD, SUB, MUL, DIV, LPAREN, RPAREN
+
+struct Token:
+    kind Kind
+    value i32
+
+struct Node:
+    token Token
+    left i32
+    right i32
+
+fn is_digit(c char) bool:
+    return c >= '0' and c <= '9'
+
+fn lex(src String) Array<Token>:
+    toks Array<Token>
+    i i32 = 0
+    while i < src.len():
+        c char = src[i]
+        t Token
+        if c == ' ':
+            i += 1
+            continue
+        if is_digit(c):
+            t.kind = Kind::NUMBER
+            while i < src.len() and is_digit(src[i]):
+                t.value = t.value * 10 + ((src[i] as i32) - 48)
+                i += 1
+            toks.append(t)
+            continue
+        match c:
+            case '+': t.kind = Kind::ADD
+            case '-': t.kind = Kind::SUB
+            case '*': t.kind = Kind::MUL
+            case '/': t.kind = Kind::DIV
+            case '(': t.kind = Kind::LPAREN
+            case ')': t.kind = Kind::RPAREN
+        toks.append(t)
+        i += 1
+    return toks
+
+fn sign(kind Kind) String:
+    match kind:
+        case Kind::ADD: return "+"
+        case Kind::SUB: return "-"
+        case Kind::MUL: return "*"
+        case Kind::DIV: return "/"
+    return "?"
+

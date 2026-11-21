@@ -1,0 +1,79 @@
+struct Parser:
+    toks Array<Token>
+    pos i32
+    nodes Array<Node>
+
+    fn peek() Kind:
+        if self.pos < self.toks.len():
+            return self.toks[self.pos].kind
+        return Kind::END
+
+    fn add(token Token, left i32, right i32) i32:
+        n Node
+        n.token = token
+        n.left = left
+        n.right = right
+        self.nodes.append(n)
+        return self.nodes.len() - 1
+
+    fn factor() i32:
+        t Token = self.toks[self.pos]
+        self.pos += 1
+        if t.kind == Kind::LPAREN:
+            inner i32 = self.expr()
+            self.pos += 1
+            return inner
+        return self.add(t, -1, -1)
+
+    fn term() i32:
+        left i32 = self.factor()
+        while self.peek() == Kind::MUL or self.peek() == Kind::DIV:
+            t Token = self.toks[self.pos]
+            self.pos += 1
+            right i32 = self.factor()
+            left = self.add(t, left, right)
+        return left
+
+    fn expr() i32:
+        left i32 = self.term()
+        while self.peek() == Kind::ADD or self.peek() == Kind::SUB:
+            t Token = self.toks[self.pos]
+            self.pos += 1
+            right i32 = self.term()
+            left = self.add(t, left, right)
+        return left
+
+    fn label(i i32) String:
+        n Node = self.nodes[i]
+        if n.token.kind == Kind::NUMBER:
+            return String::create(n.token.value)
+        return $"op: {sign(n.token.kind)}"
+
+    fn show(i i32, pre String, last bool):
+        branch String = "├─ "
+        more String = "│  "
+        if last:
+            branch = "└─ "
+            more = "   "
+        io::out($"{pre}{branch}{self.label(i)}\n")
+        n Node = self.nodes[i]
+        kid String = pre + more
+        if n.left >= 0:
+            self.show(n.left, kid, n.right < 0)
+        if n.right >= 0:
+            self.show(n.right, kid, True)
+
+    fn eval(i i32) i32:
+        n Node = self.nodes[i]
+        match n.token.kind:
+            case Kind::NUMBER: return n.token.value
+            case Kind::ADD: return self.eval(n.left) + self.eval(n.right)
+            case Kind::SUB: return self.eval(n.left) - self.eval(n.right)
+            case Kind::MUL: return self.eval(n.left) * self.eval(n.right)
+            case Kind::DIV:
+                d i32 = self.eval(n.right)
+                if d == 0:
+                    throw Error::create("division by zero")
+                return self.eval(n.left) / d
+        return 0
+
