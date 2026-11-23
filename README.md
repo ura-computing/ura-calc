@@ -26,7 +26,7 @@ result: 12
 ```
 git clone https://github.com/ura-computing/ura-calc
 cd ura-calc
-ura install
+ura deps install
 ura run                                    # then type an expression
 echo "2 * (3 + 4) - 10 / 5" | ura run      # or pipe it in
 ```
